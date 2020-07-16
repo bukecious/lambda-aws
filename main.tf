@@ -4,7 +4,7 @@ provider "aws" {
 
 data "aws_caller_identity" "current" { }
 
-# First, we need a role
+# First, we need a role  
 resource "aws_iam_role" "iam_role_for_lambda" {
   name = "iam_role_for_lambda"
 
@@ -18,11 +18,29 @@ resource "aws_iam_role" "iam_role_for_lambda" {
       "Principal": {
         "Service": "lambda.amazonaws.com"
       },
-      "Action": "sts:AssumeRole"
+      "Action": "sts:AssumeRole"     
     }
   ]
 }
 EOF
+}
+
+# testing attaching 2 policies to IAM role
+
+# resource "aws_iam_role" "iam_role_for_lambda2" {
+#   name = "iam_role_for_lambda2"
+# }
+
+# resource "aws_iam_role_policy_attachment" "mgd_pol_1" {
+#   name       = "mgd_pol_attach_name"
+#   role       = "${aws_iam_role.iam_role_for_lambda2.name}"
+#   policy_arn = "${aws_iam_policy.mgd_pol_1.arn}"
+# }
+
+resource "aws_iam_role_policy_attachment" "sns-attachrole" {
+  # name       = "sns-attachrole"
+  role       = "${aws_iam_role.iam_role_for_lambda.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
 }
 
 # # Here is a first lambda function that will run the code `hello_lambda.handler`
